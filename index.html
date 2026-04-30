@@ -1705,8 +1705,8 @@ const SNAPSHOT_KEY = 'rd_gantt_v7_snapshot';
 // ║  4. Go to API Keys → create a key, copy it                   ║
 // ║  5. Paste both below and re-upload this file to Confluence   ║
 // ╚══════════════════════════════════════════════════════════════╝
-const JSONBIN_BIN_ID  = '69cead0f36566621a8731eec';   // ← e.g. '64f2a1c3a0e3560baf9ab12e'
-const JSONBIN_API_KEY = '$2a$10$yJlmc9C76UAAdqpnsNR0oeboCCOK/VS1YJnFU4kH4kJrySTg2Ue92';   // ← e.g. '$2a$10$...'
+const JSONBIN_BIN_ID  = '';   // ← e.g. '64f2a1c3a0e3560baf9ab12e'
+const JSONBIN_API_KEY = '';   // ← e.g. '$2a$10$...'
 
 // ── External Gantt sources (read-only import) ──────────────
 // Set these to pull timelines from separate Fuel Cell / Electrolyzer Gantts.
@@ -8684,23 +8684,18 @@ function resetAllData() {
     // Require API key to confirm reset
     const key = prompt('Enter your JSONBin API key to confirm reset:');
     if (!key) { alert('Reset cancelled.'); return; }
+    if (key !== JSONBIN_API_KEY) { alert('Invalid API key. Reset cancelled.'); return; }
 
-    // Verify key by making a test request to JSONBin
-    fetch(`https://api.jsonbin.io/v3/b/${JSONBIN_BIN_ID}/meta`, {
-      headers: { 'X-Master-Key': key }
-    }).then(res => {
-      if (!res.ok) { alert('Invalid API key. Reset cancelled.'); return; }
-      // Key verified — proceed with reset
-      localStorage.removeItem(STORAGE_KEY);
-      const emptyPayload = {
-        projects: [], resources: [], equipment: [],
-        products: [], changelog: [], collapsed: [],
-        importAssociations: {}, importProductAssoc: {}, importDelayExclusions: [],
-        nextId: 10000
-      };
-      confSaveRemote(emptyPayload);
-      _resetInMemory();
-    }).catch(() => { alert('Could not verify API key. Reset cancelled.'); });
+    // Key verified — proceed with reset
+    localStorage.removeItem(STORAGE_KEY);
+    const emptyPayload = {
+      projects: [], resources: [], equipment: [],
+      products: [], changelog: [], collapsed: [],
+      importAssociations: {}, importProductAssoc: {}, importDelayExclusions: [],
+      nextId: 10000
+    };
+    confSaveRemote(emptyPayload);
+    _resetInMemory();
   } else {
     // Standalone mode — fall back to typing RESET
     const final = prompt('Type RESET to confirm data deletion:');
