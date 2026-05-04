@@ -79,7 +79,7 @@ WHY THIS FILE EXISTS
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>NLR - Southern - Celadyne Project Gantt Chart</title>
+<title>R&D Project Gantt Chart</title>
 <style>
 :root {
   --bg-primary: #ffffff;
@@ -185,6 +185,8 @@ body.readonly #confSaveBtn,
 body.readonly #confSyncBtn,
 body.readonly .add-subproject-btn,
 body.readonly #addProjectBtnWrap,
+body.readonly .edit-only,
+body.readonly .product-card-actions,
 body.readonly .changelog-add-btn { display: none !important; }
 body.readonly .quick-complete-btn:not(.sg-quick-complete) { display: none !important; }
 body.readonly .gantt-row .quick-complete-btn:not(.sg-quick-complete) { display: none !important; }
@@ -987,25 +989,10 @@ kbd {
 
 <h1>NLR - Southern - Celadyne Project Gantt Chart</h1>
 <div id="barTooltip" class="bar-tooltip"></div>
-<p class="subtitle">All data stored locally in your browser. Dependencies, resources, and sub-projects supported.</p>
+<p class="subtitle">Utilize hydrogen production, lifecycle, and techno-economic analyses to make a profit-maximizing recommendation for on-site hydrogen production and use as a recommendation at an existing steelmaker near Mobile, AL.</p>
 
 <div class="tab-bar">
   <button class="tab-btn active" onclick="switchTab('gantt')">All projects</button>
-  <div class="tab-dropdown" id="td-fuelcell">
-    <button class="tab-btn" id="tabbtn-fuelcell" onclick="switchTab('fuelcell')">Fuel Cell</button><span style="padding:0 3px;cursor:pointer;font-size:0.65rem;color:var(--text-tertiary);" onclick="toggleTabDropdown('fuelcell',event)">▾</span>
-    <div class="tab-dropdown-panel" id="tdp-fuelcell"></div>
-  </div>
-  <div class="tab-dropdown" id="td-electrolyzer">
-    <button class="tab-btn" id="tabbtn-electrolyzer" onclick="switchTab('electrolyzer')">Electrolyzer</button><span style="padding:0 3px;cursor:pointer;font-size:0.65rem;color:var(--text-tertiary);" onclick="toggleTabDropdown('electrolyzer',event)">▾</span>
-    <div class="tab-dropdown-panel" id="tdp-electrolyzer"></div>
-  </div>
-  <div class="tab-dropdown" id="td-exploration">
-    <button class="tab-btn" id="tabbtn-exploration" onclick="switchTab('exploration')">Exploration</button><span style="padding:0 3px;cursor:pointer;font-size:0.65rem;color:var(--text-tertiary);" onclick="toggleTabDropdown('exploration',event)">▾</span>
-    <div class="tab-dropdown-panel" id="tdp-exploration"></div>
-  </div>
-  <button class="tab-btn" onclick="switchTab('products')">Products</button>
-  <button class="tab-btn" onclick="switchTab('resources')">Team</button>
-  <button class="tab-btn" onclick="switchTab('equipment')">Equipment</button>
   <button class="tab-btn" onclick="switchTab('active')">🔬 Active</button>
   <button class="tab-btn" onclick="switchTab('milestones')">◆ Milestones</button>
   <button class="tab-btn" onclick="switchTab('changelog')">📋 Changelog</button>
@@ -1015,7 +1002,7 @@ kbd {
   <div class="toolbar" style="flex-direction:column;gap:0.5rem;align-items:stretch;">
     <!-- Row 1: Actions -->
     <div style="display:flex;gap:0.5rem;flex-wrap:wrap;align-items:center;">
-      <div class="toolbar-group">
+      <div class="toolbar-group edit-only">
         <div id="addProjectBtnWrap"><button class="btn-primary" onclick="openModal()">+ Add project</button></div>
       </div>
       <div class="toolbar-group">
@@ -1023,12 +1010,12 @@ kbd {
         <button onclick="collapseAll()" title="Collapse all rows">⊟ Collapse</button>
         <button onclick="expandAll()" title="Expand all rows">⊞ Expand</button>
       </div>
-      <div class="toolbar-group">
+      <div class="toolbar-group edit-only">
         <button id="whatifBtn" onclick="toggleWhatIfMode()">🔮 What-if</button>
         <button id="statsBtn" onclick="toggleStats()" title="Toggle stats panel (S)">📊 Stats</button>
         <button onclick="openShortcuts()" title="Keyboard shortcuts (?)">⌨️</button>
       </div>
-      <div class="data-actions">
+      <div class="data-actions edit-only">
         <button onclick="exportData()">Export</button>
         <button onclick="document.getElementById('importFile').click()">Import</button>
         <button onclick="resetAllData()" style="color:#A32D2D;" title="Clear all data and start fresh">Reset</button>
@@ -1144,7 +1131,7 @@ kbd {
 <div id="resourcesTab" class="hidden">
   <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;flex-wrap:wrap;gap:0.75rem;">
     <div style="display:flex;gap:0.5rem;align-items:center;">
-      <button class="btn-primary" onclick="openMemberModal()">+ Add member</button>
+      <button class="btn-primary edit-only" onclick="openMemberModal()">+ Add member</button>
       <div style="display:flex;border:1px solid var(--border);border-radius:6px;overflow:hidden;">
         <button id="teamViewList" onclick="setTeamView('list')" style="padding:0.3rem 0.75rem;font-size:0.78rem;border:none;cursor:pointer;background:var(--accent);color:white;">List</button>
         <button id="teamViewOrg" onclick="setTeamView('org')" style="padding:0.3rem 0.75rem;font-size:0.78rem;border:none;cursor:pointer;background:var(--bg-primary);color:var(--text-secondary);">Org Chart</button>
@@ -1163,7 +1150,7 @@ kbd {
 
 <div id="equipmentTab" class="hidden">
   <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;flex-wrap:wrap;gap:0.75rem;">
-    <button class="btn-primary" onclick="openEquipmentModal()">+ Add equipment</button>
+    <button class="btn-primary edit-only" onclick="openEquipmentModal()">+ Add equipment</button>
     <div id="equipSummary" style="display:flex;gap:0.75rem;flex-wrap:wrap;"></div>
   </div>
   <div class="resource-panel" style="border:none;padding:0;background:transparent;">
@@ -1173,7 +1160,7 @@ kbd {
 
 <div id="productsTab" class="hidden">
   <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;flex-wrap:wrap;gap:0.75rem;">
-    <button class="btn-primary" onclick="openProductModal()">+ Add product line</button>
+    <button class="btn-primary edit-only" onclick="openProductModal()">+ Add product line</button>
     <div id="productSummary" style="display:flex;gap:0.75rem;flex-wrap:wrap;"></div>
   </div>
   <div class="products-grid" id="productsGrid"></div>
@@ -1721,6 +1708,7 @@ const EXTERNAL_BINS = [
 // Read-only mode: add ?readonly=1 to the URL to hide all editing UI.
 // Stage-gate quick-complete (✓) still works in readonly mode.
 const IS_READONLY = new URLSearchParams(window.location.search).has('readonly');
+if (IS_READONLY) document.body.classList.add('readonly');
 
 // ── Storage state ───────────────────────────────────────────
 const CONF_ATTACHMENT_NAME = 'gantt-data.json'; // kept for compat
